@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            line-height: 1.5;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-top: 25px;
+        }
+
+        .attribute {
+            margin-bottom: 5px;
+        }
+
+        .step {
+            border: 1px solid #cccccc;
+            padding: 10px;
+            margin-top: 15px;
+        }
+
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: monospace;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <h1>{{NAME}}</h1>
+
+    <div class="section">
+        <h2>Информация о тест-кейсе</h2>
+
+        <div class="attribute"><b>ID:</b> {{ID}}</div>
+        <div class="attribute"><b>Title:</b> {{TITLE}}</div>
+        <div class="attribute"><b>Status:</b> {{STATUS}}</div>
+
+        <div class="attribute"><b>Tracked:</b> {{IS_TRACKED}}</div>
+        <div class="attribute"><b>Auto:</b> {{IS_AUTO}}</div>
+        <div class="attribute"><b>Individual:</b> {{IS_INDIVID}}</div>
+        <div class="attribute"><b>Unique:</b> {{IS_UNIQUE}}</div>
+
+        <div class="attribute"><b>Priority:</b> {{PRIORITY}}</div>
+        <div class="attribute"><b>Type:</b> {{TYPE}}</div>
+        <div class="attribute"><b>Complexity:</b> {{COMPLEXITY}}</div>
+    </div>
+
+    <div class="section">
+
+        <h2>Шаги</h2>
+
+        {{STEPS}}
+
+    </div>
+
+</body>
+</html>
