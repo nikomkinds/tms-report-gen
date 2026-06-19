@@ -1,13 +1,13 @@
 from pathlib import Path
 
-from parser import load_test_cases
-from utils import sanitize_filename
+from tms_report_gen.parser import load_test_cases
+from tms_report_gen.utils import sanitize_filename
 
-from pdf_generator import generate_pdf
-from docx_generator import generate_docx
+from tms_report_gen.pdf_generator import generate_pdf
+from tms_report_gen.docx_generator import generate_docx
 
 # Generate all reports for the given test cases with the specified format and save them to the output directory
-def generate_all_reports(
+def generate_reports(
         cases_csv_path: str,
         steps_csv_path: str,
         output_dir: str,

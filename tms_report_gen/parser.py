@@ -1,6 +1,6 @@
 import csv
 
-from models import TestCase, TestStep
+from tms_report_gen.models import TestCase, TestStep
 
 
 def str_to_bool(value: str) -> bool:

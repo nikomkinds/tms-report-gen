@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from docx import Document
 from docx.shared import Pt
 
-from models import TestCase
+from tms_report_gen.models import TestCase
 
 
 def generate_docx(

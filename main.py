@@ -1,8 +1,9 @@
-from report_service import generate_all_reports
+from tms_report_gen import generate_reports
 
 
-generate_all_reports(
-    cases_csv_path="case_case.csv",
-    steps_csv_path="case_casestep.csv",
-    output_dir="reports",
+generate_reports(
+    cases_csv_path="case_case.csv",         # Cases CSV file path
+    steps_csv_path="case_casestep.csv",     # Case steps CSV file path
+    output_dir="reports",                   # Output directory path
+    report_format=None,                     # Report format: "pdf", "docx" or None for both
 )

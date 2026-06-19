@@ -2,7 +2,12 @@ from pathlib import Path
 
 from weasyprint import HTML
 
-from models import TestCase
+from tms_report_gen.models import TestCase
+
+TEMPLATES_DIR = (
+    Path(__file__).parent / "templates"
+)
+
 
 # Generating PDF report for test case
 def generate_pdf(
@@ -17,7 +22,7 @@ def generate_pdf(
 # Building HTML content for test case report using template and test case data
 def build_html(testcase: TestCase) -> str:
 
-    template_path = Path("templates/testcase.html")
+    template_path = TEMPLATES_DIR / "testcase.html"
 
     template = template_path.read_text(encoding="utf-8")
 
