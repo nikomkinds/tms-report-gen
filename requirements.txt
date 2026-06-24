@@ -1,3 +1,4 @@
 python-docx
 weasyprint
 beautifulsoup4
+Jinja2

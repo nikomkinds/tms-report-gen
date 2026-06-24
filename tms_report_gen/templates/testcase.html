@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
 
@@ -49,32 +50,85 @@
 
 <body>
 
-    <h1>{{NAME}}</h1>
+    <h1>{{ testcase.name }}</h1>
 
     <div class="section">
+
         <h2>Информация о тест-кейсе</h2>
 
-        <div class="attribute"><b>ID:</b> {{ID}}</div>
-        <div class="attribute"><b>Title:</b> {{TITLE}}</div>
-        <div class="attribute"><b>Status:</b> {{STATUS}}</div>
+        <div class="attribute">
+            <b>ID:</b> {{ testcase.id }}
+        </div>
 
-        <div class="attribute"><b>Tracked:</b> {{IS_TRACKED}}</div>
-        <div class="attribute"><b>Auto:</b> {{IS_AUTO}}</div>
-        <div class="attribute"><b>Individual:</b> {{IS_INDIVID}}</div>
-        <div class="attribute"><b>Unique:</b> {{IS_UNIQUE}}</div>
+        <div class="attribute">
+            <b>Title:</b> {{ testcase.title }}
+        </div>
 
-        <div class="attribute"><b>Priority:</b> {{PRIORITY}}</div>
-        <div class="attribute"><b>Type:</b> {{TYPE}}</div>
-        <div class="attribute"><b>Complexity:</b> {{COMPLEXITY}}</div>
+        <div class="attribute">
+            <b>Status:</b> {{ testcase.status }}
+        </div>
+
+        <div class="attribute">
+            <b>Tracked:</b> {{ testcase.is_tracked }}
+        </div>
+
+        <div class="attribute">
+            <b>Auto:</b> {{ testcase.is_auto }}
+        </div>
+
+        <div class="attribute">
+            <b>Individual:</b> {{ testcase.is_individ }}
+        </div>
+
+        <div class="attribute">
+            <b>Unique:</b> {{ testcase.is_unique }}
+        </div>
+
+        <div class="attribute">
+            <b>Priority:</b> {{ testcase.priority }}
+        </div>
+
+        <div class="attribute">
+            <b>Type:</b> {{ testcase.test_type }}
+        </div>
+
+        <div class="attribute">
+            <b>Complexity:</b> {{ testcase.complexity }}
+        </div>
+
     </div>
 
     <div class="section">
 
         <h2>Шаги</h2>
 
-        {{STEPS}}
+        {% for step in testcase.steps %}
+
+        <div class="step">
+
+            <div class="step-title">
+                Step #{{ step.order }} ({{ step.step_type }})
+            </div>
+
+            <div>
+                {{ step.action | safe }}
+            </div>
+
+            {% if step.expected_result %}
+
+            <div>
+                <b>Expected result:</b>
+                {{ step.expected_result | safe }}
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
 
     </div>
 
 </body>
+
 </html>
