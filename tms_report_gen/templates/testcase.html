@@ -65,7 +65,7 @@
         </div>
 
         <div class="attribute">
-            <b>Status:</b> {{ testcase.status }}
+            <b>Status:</b> {{ testcase.status if testcase.status is not none else '-' }}
         </div>
 
         <div class="attribute">
@@ -85,15 +85,15 @@
         </div>
 
         <div class="attribute">
-            <b>Priority:</b> {{ testcase.priority }}
+            <b>Priority:</b> {{ testcase.priority if testcase.priority is not none else '-' }}
         </div>
 
         <div class="attribute">
-            <b>Type:</b> {{ testcase.test_type }}
+            <b>Type:</b> {{ testcase.test_type if testcase.test_type is not none else '-' }}
         </div>
 
         <div class="attribute">
-            <b>Complexity:</b> {{ testcase.complexity }}
+            <b>Complexity:</b> {{ testcase.complexity if testcase.complexity is not none else '-' }}
         </div>
 
     </div>
@@ -107,7 +107,7 @@
         <div class="step">
 
             <div class="step-title">
-                Step #{{ step.order }} ({{ step.step_type }})
+                Step #{{ step.order if step.order is not none else '-' }} ({{ step.step_type }})
             </div>
 
             <div>

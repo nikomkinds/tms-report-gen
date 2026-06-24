@@ -3,6 +3,7 @@ from docx import Document
 from docx.shared import Pt
 
 from tms_report_gen.models import TestCase
+from tms_report_gen.utils import format_value
 
 
 def generate_docx(
@@ -37,7 +38,7 @@ def generate_docx(
     for step in testcase.steps:
 
         title = (
-            f"Step #{step.order} "
+            f"Step #{format_value(step.order)} "
             f"({step.step_type})"
         )
 
@@ -69,7 +70,7 @@ def add_attribute(
     key_run = p.add_run(f"{name}: ")
     key_run.bold = True
 
-    p.add_run(str(value))
+    p.add_run(format_value(value))
 
 
 def parse_html(

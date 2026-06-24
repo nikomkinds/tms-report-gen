@@ -8,7 +8,7 @@ class TestStep:
     step_type: str
     action: str
     expected_result: str
-    order: int
+    order: int | None
 
 
 # Given in case CSV
@@ -19,15 +19,15 @@ class TestCase:
     name: str
     title: str
 
-    status: int
+    status: int | None
 
     is_tracked: bool
     is_auto: bool
     is_individ: bool
     is_unique: bool
 
-    priority: int
-    test_type: int
-    complexity: int
+    priority: int | None
+    test_type: int | None
+    complexity: int | None
 
     steps: list[TestStep] = field(default_factory=list)

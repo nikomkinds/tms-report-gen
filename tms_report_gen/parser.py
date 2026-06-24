@@ -6,6 +6,14 @@ from tms_report_gen.models import TestCase, TestStep
 def str_to_bool(value: str) -> bool:
     return value.lower() == "true"
 
+def parse_int(value: str) -> int | None:
+
+    try:
+        return int(value)
+
+    except (ValueError, TypeError):
+        return None
+
 
 def load_test_cases(
     cases_csv_path: str,
@@ -27,16 +35,16 @@ def load_test_cases(
                 name=row["name"],
                 title=row["title"],
 
-                status=int(row["status"]),
+                status=parse_int(row["status"]),
 
                 is_tracked=str_to_bool(row["is_tracked"]),
                 is_auto=str_to_bool(row["is_auto"]),
                 is_individ=str_to_bool(row["is_individ"]),
                 is_unique=str_to_bool(row["is_unique"]),
 
-                priority=int(row["priority"]),
-                test_type=int(row["type"]),
-                complexity=int(row["complexity"]),
+                priority=parse_int(row["priority"]),
+                test_type=parse_int(row["type"]),
+                complexity=parse_int(row["complexity"]),
 
                 steps=[]
             )
@@ -55,7 +63,7 @@ def load_test_cases(
                 step_type=row["step_type"],
                 action=row["action"],
                 expected_result=row["expected_result"],
-                order=int(row["order"]),
+                order=parse_int(row["order"]),
             )
 
             case_id = int(row["case_id"])
