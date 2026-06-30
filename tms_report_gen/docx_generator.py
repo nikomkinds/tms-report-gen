@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from docx import Document
-from docx.shared import Pt
+from docx.shared import Pt, Inches
 
 from tms_report_gen.models import TestCase
 from tms_report_gen.utils import format_value
@@ -104,6 +104,19 @@ def parse_html(
             run.font.name = "Courier New"
             run.font.size = Pt(10)
 
+
+        # Lists
+        elif element.name == "ul":
+            parse_list(doc, element, ordered=False)
+
+        elif element.name == "ol":
+            parse_list(doc, element, ordered=True)
+
+
+        # Tables
+        elif element.name == "table":
+            parse_table(doc, element)
+
         
         # Unhandled tags
         elif isinstance(element, str):
@@ -163,4 +176,125 @@ def parse_inline_tags(
 
             paragraph.add_run(
                 child.get_text()
+            )
+
+
+def parse_list(
+    doc: Document,
+    list_element,
+    ordered: bool,
+    level: int = 0,
+):
+
+    items = list_element.find_all(
+        "li",
+        recursive=False
+    )
+
+    # Enumerating through list items and adding them to the document
+    for index, item in enumerate(items, start=1):
+
+        p = doc.add_paragraph()
+
+        # Adding indent for nested lists
+        p.paragraph_format.left_indent = Inches(
+            0.3 * level
+        )
+
+        # Defining prefix for ordered and unordered lists
+        if ordered:
+            prefix = f"{index}. "
+        else:
+            prefix = "• "
+
+        p.add_run(prefix)
+
+        # Parsing the content of the list item
+        for child in item.children:
+
+            # Text
+            if isinstance(child, str):
+
+                text = child.strip()
+
+                if text:
+                    p.add_run(text)
+
+            # Nested lists
+            elif child.name == "ul":
+
+                parse_list(
+                    doc,
+                    child,
+                    ordered=False,
+                    level=level + 1,
+                )
+
+            elif child.name == "ol":
+
+                parse_list(
+                    doc,
+                    child,
+                    ordered=True,
+                    level=level + 1,
+                )
+
+            # Other inline tags
+            else:
+
+                parse_inline_tags(
+                    p,
+                    child
+                )
+
+
+def parse_table(
+    doc: Document,
+    table_element,
+):
+
+    # Finding all rows in the table
+    rows = table_element.find_all(
+        "tr",
+        recursive=False
+    )
+
+    if not rows:
+        return
+
+    first_row = rows[0]
+
+    # Finding all columns in the first row to determine the number of columns in the table
+    columns = first_row.find_all(
+        ["td", "th"],
+        recursive=False
+    )
+
+    # Creating the table in the document
+    table = doc.add_table(
+        rows=0,
+        cols=len(columns)
+    )
+
+    table.style = "Table Grid"
+
+    for row_element in rows:
+
+        # Finding all cells in the current row
+        cells = row_element.find_all(
+            ["td", "th"],
+            recursive=False
+        )
+
+        row = table.add_row().cells
+
+        # Enumerating through the cells and adding them to the document table
+        for index, cell in enumerate(cells):
+
+            cell_paragraph = row[index].paragraphs[0]
+
+            # Parsing the content of the cell
+            parse_inline_tags(
+                cell_paragraph,
+                cell
             )
