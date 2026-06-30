@@ -171,6 +171,14 @@ def parse_inline_tags(
 
             paragraph.add_run("\n")
 
+        # Hyperlink
+        elif child.name == "a":
+
+            add_link(
+                paragraph,
+                child
+            )
+
         # Unhandled tag
         else:
 
@@ -239,6 +247,14 @@ def parse_list(
                     level=level + 1,
                 )
 
+            # Hyperlink
+            elif child.name == "a":
+
+                add_link(
+                    p,
+                    child
+                )
+
             # Other inline tags
             else:
 
@@ -298,3 +314,37 @@ def parse_table(
                 cell_paragraph,
                 cell
             )
+
+
+def add_link(
+    paragraph,
+    link_element,
+):
+
+    # Getting the text of the link
+    text = link_element.get_text(
+        strip=True
+    )
+
+    # Getting href attribute
+    href = link_element.get(
+        "href",
+        ""
+    )
+
+    # Formatting the link text for display in the document
+    if text and href:
+        link_text = f"{text} ({href})"
+
+    elif href:
+        link_text = href
+
+    else:
+        link_text = text
+
+    # Adding the link text to the paragraph with underline formatting
+    run = paragraph.add_run(
+        link_text
+    )
+
+    run.underline = True
