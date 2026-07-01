@@ -25,11 +25,8 @@ def format_value(value) -> str:
 # Resolve image paths in HTML content to absolute file URIs based on the provided media root directory
 def resolve_image_paths(
     html: str,
-    media_root: str | None,
+    media_root: str,
 ) -> str:
-
-    if not media_root:
-        return html
 
     soup = BeautifulSoup(
         html,
@@ -42,6 +39,10 @@ def resolve_image_paths(
         src = img.get("src")
 
         if not src:
+            continue
+
+        # Already resolved
+        if src.startswith("file:///"):
             continue
 
         image_path = (

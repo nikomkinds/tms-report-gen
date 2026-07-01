@@ -1,14 +1,20 @@
+from pathlib import Path
+
 from bs4 import BeautifulSoup
 from docx import Document
 from docx.shared import Pt, Inches
 
 from tms_report_gen.models import TestCase
-from tms_report_gen.utils import format_value
+from tms_report_gen.utils import (
+    format_value, 
+    resolve_image_paths
+)
 
 
 def generate_docx(
     testcase: TestCase,
     output_path: str,
+    media_root: str,
 ):
 
     doc = Document()
@@ -44,7 +50,7 @@ def generate_docx(
 
         doc.add_heading(title, level=3)
 
-        parse_html(doc, step.action)
+        parse_html(doc, step.action, media_root)
 
         if step.expected_result:
 
@@ -53,7 +59,7 @@ def generate_docx(
             run = p.add_run("Expected result:")
             run.bold = True
 
-            parse_html(doc, step.expected_result)
+            parse_html(doc, step.expected_result, media_root)
 
 
     doc.save(output_path)
@@ -76,7 +82,14 @@ def add_attribute(
 def parse_html(
     doc: Document,
     html: str,
+    media_root: str,
 ):
+
+    # Resolving image paths
+    html = resolve_image_paths(
+        html,
+        media_root,
+    )
 
     soup = BeautifulSoup(html, "html.parser")
 
@@ -117,7 +130,18 @@ def parse_html(
         elif element.name == "table":
             parse_table(doc, element)
 
-        
+
+        # Top-level images
+        elif element.name == "img":
+
+            p = doc.add_paragraph()
+
+            add_image(
+                p,
+                element,
+            )
+
+
         # Unhandled tags
         elif isinstance(element, str):
 
@@ -179,6 +203,14 @@ def parse_inline_tags(
                 child
             )
 
+        # Image
+        elif child.name == "img":
+
+            add_image(
+                paragraph,
+                child
+            )
+        
         # Unhandled tag
         else:
 
@@ -348,3 +380,50 @@ def add_link(
     )
 
     run.underline = True
+
+
+def add_image(
+    paragraph,
+    img_element,
+):
+
+    src = img_element.get("src")
+
+    # Handle invalid cases for the src attribute
+    if not src:
+        return
+
+    if not src.startswith("file:///"):
+        return
+
+    try:
+
+        # Resolving the image path from the src attribute
+        image_path = Path(
+            src.replace("file:///", "")
+        )
+
+        # Handle image absence with a placeholder
+        if not image_path.exists():
+
+            paragraph.add_run(
+                f"[Image not found: {src}]"
+            )
+
+            return
+
+        # Adding the image to the document
+        run = paragraph.add_run()
+
+        run.add_picture(
+            str(image_path),
+            width=Inches(5.5)
+        )
+
+    # Handle any exceptions so that the document generation doesn't fail
+    except Exception:
+
+        
+        paragraph.add_run(
+            f"[Failed to load image: {src}]"
+        )

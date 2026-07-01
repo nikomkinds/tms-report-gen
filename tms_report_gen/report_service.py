@@ -11,8 +11,8 @@ def generate_reports(
         cases_csv_path: str,
         steps_csv_path: str,
         output_dir: str,
+        media_root: str,
         report_format: str | None = None,
-        media_root: str | None = None,
 ):
     # Load test cases from CSV files
     test_cases = load_test_cases(cases_csv_path, steps_csv_path)
@@ -46,6 +46,7 @@ def generate_reports(
             generate_docx(
                 test_case, 
                 str(docx_path),
+                media_root
             )
 
             print(f"[DOCX] Created: {docx_path}")

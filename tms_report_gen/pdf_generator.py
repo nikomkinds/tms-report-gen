@@ -23,7 +23,7 @@ env = Environment(
 def generate_pdf(
     testcase: TestCase,
     output_path: str,
-    media_root: str | None = None,
+    media_root: str,
 ):
 
     html = build_html(testcase, media_root)
@@ -34,7 +34,7 @@ def generate_pdf(
 # Building HTML content for test case report using Jinja2 template
 def build_html(
     testcase: TestCase,
-    media_root: str | None = None
+    media_root: str,
 ) -> str:
 
     template = env.get_template(
