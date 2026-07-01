@@ -6,6 +6,7 @@ from jinja2 import FileSystemLoader
 from weasyprint import HTML
 
 from tms_report_gen.models import TestCase
+from tms_report_gen.utils import resolve_image_paths
 
 
 TEMPLATES_DIR = (
@@ -22,19 +23,39 @@ env = Environment(
 def generate_pdf(
     testcase: TestCase,
     output_path: str,
+    media_root: str | None = None,
 ):
 
-    html = build_html(testcase)
+    html = build_html(testcase, media_root)
 
     HTML(string=html).write_pdf(output_path)
 
 
 # Building HTML content for test case report using Jinja2 template
-def build_html(testcase: TestCase) -> str:
+def build_html(
+    testcase: TestCase,
+    media_root: str | None = None
+) -> str:
 
     template = env.get_template(
         "testcase.html"
     )
+
+    for step in testcase.steps:
+
+        step.action = resolve_image_paths(
+            step.action,
+            media_root,
+        )
+
+        if step.expected_result:
+
+            step.expected_result = (
+                resolve_image_paths(
+                    step.expected_result,
+                    media_root,
+                )
+            )
 
     html = template.render(
         testcase=testcase

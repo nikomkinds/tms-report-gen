@@ -1,5 +1,9 @@
 import re
 
+from pathlib import Path
+
+from bs4 import BeautifulSoup
+
 
 # Replace restricted characters in a filename
 def sanitize_filename(name: str) -> str:
@@ -8,6 +12,7 @@ def sanitize_filename(name: str) -> str:
 
     return name.strip()
 
+
 # Write empty valuse as '-'
 def format_value(value) -> str:
 
@@ -15,3 +20,35 @@ def format_value(value) -> str:
         return "-"
 
     return str(value)
+
+
+# Resolve image paths in HTML content to absolute file URIs based on the provided media root directory
+def resolve_image_paths(
+    html: str,
+    media_root: str | None,
+) -> str:
+
+    if not media_root:
+        return html
+
+    soup = BeautifulSoup(
+        html,
+        "html.parser"
+    )
+
+    # Getting all the image tags and updating their src attributes to absolute file URIs
+    for img in soup.find_all("img"):
+
+        src = img.get("src")
+
+        if not src:
+            continue
+
+        image_path = (
+            Path(media_root) /
+            src.lstrip("/")
+        ).resolve()
+
+        img["src"] = image_path.as_uri()
+
+    return str(soup)

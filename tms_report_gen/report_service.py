@@ -12,6 +12,7 @@ def generate_reports(
         steps_csv_path: str,
         output_dir: str,
         report_format: str | None = None,
+        media_root: str | None = None,
 ):
     # Load test cases from CSV files
     test_cases = load_test_cases(cases_csv_path, steps_csv_path)
@@ -30,7 +31,11 @@ def generate_reports(
         if report_format in ["pdf", None]:
 
             pdf_path = output_path / f"{base_filename}.pdf"
-            generate_pdf(test_case, str(pdf_path))
+            generate_pdf(
+                test_case, 
+                str(pdf_path), 
+                media_root,
+            )
 
             print(f"[PDF] Created: {pdf_path}")
         
@@ -38,7 +43,10 @@ def generate_reports(
         if report_format in ["docx", None]:
 
             docx_path = output_path / f"{base_filename}.docx"
-            generate_docx(test_case, str(docx_path))
+            generate_docx(
+                test_case, 
+                str(docx_path),
+            )
 
             print(f"[DOCX] Created: {docx_path}")
         
